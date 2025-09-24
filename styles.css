@@ -975,6 +975,154 @@ body::before {
     }
 }
 
+/* 流式输出效果 */
+.ai-response.streaming {
+    position: relative;
+}
+
+.stream-cursor {
+    display: inline;
+    color: #667eea;
+    animation: blink 1s infinite;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.stream-content {
+    display: inline;
+}
+
+/* 八字排盘卡片样式 */
+.bazi-cards-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.bazi-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.95) 100%);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.bazi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.bazi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: rgba(102, 126, 234, 0.4);
+}
+
+.card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+    padding-bottom: 8px;
+}
+
+.card-content {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Noto Serif SC', serif;
+}
+
+/* 八字卡片响应式设计 */
+@media (max-width: 1024px) {
+    .bazi-cards-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 16px;
+    }
+    
+    .bazi-card {
+        padding: 16px;
+    }
+    
+    .card-content {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .bazi-cards-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 12px;
+    }
+    
+    .bazi-card {
+        padding: 12px;
+    }
+    
+    .card-title {
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+    }
+    
+    .card-content {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bazi-cards-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        padding: 8px;
+    }
+    
+    .bazi-card {
+        padding: 8px;
+    }
+    
+    .card-title {
+        font-size: 0.7rem;
+        margin-bottom: 6px;
+    }
+    
+    .card-content {
+        font-size: 1rem;
+    }
+}
+
 /* 付费按钮区域样式 */
 .payment-section {
     margin: 32px 0;

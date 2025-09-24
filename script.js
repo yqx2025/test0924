@@ -233,56 +233,15 @@ class FortuneApp {
             // 创建控制器（无超时限制，支持流式输出）
             const controller = new AbortController();
             
-            const response = await fetch(apiEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                signal: controller.signal,
-                body: JSON.stringify({
-                    model: 'deepseek-chat',
-                    messages: [
-                        {
-                            role: 'system',
-                            content: '你是一位专业的命理师，精通小六壬卜卦和五行八字分析。请用专业、准确、简洁的语言为用户提供分析。请勿在回复中提及AI、DeepSeek、算法生成或仅供参考等字样。'
-                        },
-                        {
-                            role: 'user',
-                            content: prompt
-                        }
-                    ],
-                    max_tokens: 4000,
-                    stream: true,
-                    temperature: 0.7,
-                    reasoning: false  // 关闭思考模式，使用纯chat模式
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            let aiResponse = data.choices[0].message.content;
-
-            // 过滤掉DeepSeek相关的语句
-            aiResponse = this.filterDeepSeekContent(aiResponse);
-
-            // 将AI响应从Markdown格式转换为HTML格式
-            aiResponse = this.formatAIResponse(aiResponse);
-
-            if (target) {
-                target.innerHTML = `<div class="ai-response">${aiResponse}</div>`;
-                
-                // 如果是完整八字分析，显示付费按钮
-                if (type === 'complete_bazi') {
-                    setTimeout(() => {
-                        const paymentSection = document.getElementById('paymentSection');
-                        if (paymentSection) {
-                            paymentSection.classList.remove('hidden');
-                        }
-                    }, 1000);
-                }
+            // 检测是否支持流式显示
+            const isLocal = apiEndpoint.includes('localhost');
+            
+            if (isLocal) {
+                // 本地环境：处理直接流式响应
+                await this.handleDirectStream(apiEndpoint, controller, prompt, target, type);
+            } else {
+                // Netlify环境：处理聚合后的响应
+                await this.handleNetlifyResponse(apiEndpoint, controller, prompt, target, type);
             }
 
         } catch (error) {
@@ -299,6 +258,157 @@ class FortuneApp {
                 }
                 
                 target.innerHTML = `<div class="error">${errorMessage}</div>`;
+            }
+        }
+    }
+
+    // 处理Netlify环境的响应（聚合模式）
+    async handleNetlifyResponse(apiEndpoint, controller, prompt, target, type) {
+        const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            signal: controller.signal,
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    {
+                        role: 'system',
+                        content: '你是一位专业的命理师，精通小六壬卜卦和五行八字分析。请用专业、准确、简洁的语言为用户提供分析。请勿在回复中提及AI、DeepSeek、算法生成或仅供参考等字样。'
+                    },
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                max_tokens: 4000,
+                stream: true,
+                temperature: 0.7,
+                reasoning: false
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        let aiResponse = data.choices[0].message.content;
+
+        // 过滤掉DeepSeek相关的语句
+        aiResponse = this.filterDeepSeekContent(aiResponse);
+
+        // 将AI响应从Markdown格式转换为HTML格式
+        aiResponse = this.formatAIResponse(aiResponse);
+
+        if (target) {
+            target.innerHTML = `<div class="ai-response">${aiResponse}</div>`;
+            
+            // 如果是完整八字分析，显示付费按钮
+            if (type === 'complete_bazi') {
+                setTimeout(() => {
+                    const paymentSection = document.getElementById('paymentSection');
+                    if (paymentSection) {
+                        paymentSection.classList.remove('hidden');
+                    }
+                }, 1000);
+            }
+        }
+    }
+
+    // 处理本地环境的直接流式响应
+    async handleDirectStream(apiEndpoint, controller, prompt, target, type) {
+        const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            signal: controller.signal,
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    {
+                        role: 'system',
+                        content: '你是一位专业的命理师，精通小六壬卜卦和五行八字分析。请用专业、准确、简洁的语言为用户提供分析。请勿在回复中提及AI、DeepSeek、算法生成或仅供参考等字样。'
+                    },
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                max_tokens: 4000,
+                stream: true,
+                temperature: 0.7,
+                reasoning: false
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // 处理流式响应
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullContent = '';
+        let currentContent = '';
+        
+        if (target) {
+            target.innerHTML = '<div class="ai-response streaming"><div class="stream-content"></div><div class="stream-cursor">▊</div></div>';
+            const contentDiv = target.querySelector('.stream-content');
+            
+            try {
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6);
+                            if (data.trim() === '[DONE]') continue;
+                            
+                            try {
+                                const parsed = JSON.parse(data);
+                                if (parsed.choices && parsed.choices[0] && parsed.choices[0].delta && parsed.choices[0].delta.content) {
+                                    const newContent = parsed.choices[0].delta.content;
+                                    fullContent += newContent;
+                                    currentContent += newContent;
+                                    
+                                    // 过滤和格式化内容
+                                    const filteredContent = this.filterDeepSeekContent(currentContent);
+                                    const formattedContent = this.formatAIResponse(filteredContent);
+                                    
+                                    // 更新显示
+                                    contentDiv.innerHTML = formattedContent;
+                                }
+                            } catch (e) {
+                                // 忽略解析错误
+                            }
+                        }
+                    }
+                }
+                
+                // 流式完成，移除光标效果
+                target.querySelector('.stream-cursor').remove();
+                target.querySelector('.ai-response').classList.remove('streaming');
+                
+                // 如果是完整八字分析，显示付费按钮
+                if (type === 'complete_bazi') {
+                    setTimeout(() => {
+                        const paymentSection = document.getElementById('paymentSection');
+                        if (paymentSection) {
+                            paymentSection.classList.remove('hidden');
+                        }
+                    }, 1000);
+                }
+                
+            } catch (error) {
+                console.error('流式处理错误:', error);
+                target.innerHTML = '<div class="error">流式显示出现错误，请刷新重试</div>';
             }
         }
     }
@@ -344,6 +454,9 @@ class FortuneApp {
     formatAIResponse(text) {
         if (!text) return '';
         
+        // 特殊处理八字排盘部分
+        text = this.formatBaziCards(text);
+        
         // 替换标题格式
         text = text.replace(/^### (.*$)/gm, '<h4 class="ai-subtitle">$1</h4>');
         text = text.replace(/^## (.*$)/gm, '<h3 class="ai-title">$1</h3>');
@@ -365,6 +478,52 @@ class FortuneApp {
         
         // 处理换行
         text = text.replace(/\n/g, '<br>');
+        
+        return text;
+    }
+
+    // 格式化八字排盘为卡片布局
+    formatBaziCards(text) {
+        // 匹配八字排盘部分的正则表达式
+        const baziPattern = /(## 八字排盘[\s\S]*?)(?=##|$)/;
+        const match = text.match(baziPattern);
+        
+        if (match) {
+            const baziSection = match[1];
+            
+            // 提取四柱信息
+            const yearMatch = baziSection.match(/年柱：([^<\n]*)/);
+            const monthMatch = baziSection.match(/月柱：([^<\n]*)/);
+            const dayMatch = baziSection.match(/日柱：([^<\n]*)/);
+            const hourMatch = baziSection.match(/时柱：([^<\n]*)/);
+            
+            if (yearMatch && monthMatch && dayMatch && hourMatch) {
+                const cardsHtml = `
+                    <h3 class="ai-title">八字排盘</h3>
+                    <div class="bazi-cards-container">
+                        <div class="bazi-card">
+                            <div class="card-title">年柱</div>
+                            <div class="card-content">${yearMatch[1].trim()}</div>
+                        </div>
+                        <div class="bazi-card">
+                            <div class="card-title">月柱</div>
+                            <div class="card-content">${monthMatch[1].trim()}</div>
+                        </div>
+                        <div class="bazi-card">
+                            <div class="card-title">日柱</div>
+                            <div class="card-content">${dayMatch[1].trim()}</div>
+                        </div>
+                        <div class="bazi-card">
+                            <div class="card-title">时柱</div>
+                            <div class="card-content">${hourMatch[1].trim()}</div>
+                        </div>
+                    </div>
+                `;
+                
+                // 替换原始八字排盘部分
+                text = text.replace(baziPattern, cardsHtml);
+            }
+        }
         
         return text;
     }
