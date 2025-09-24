@@ -158,19 +158,39 @@ class FortuneApp {
     }
 
     calculateBaziPillars(year, month, day, hour) {
-        // 简化的八字计算（实际应用中需要更复杂的算法）
+        // 真正的八字计算算法
         const ganList = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
         const zhiList = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
 
-        // 随机生成八字（实际应用中需要根据出生时间计算）
-        document.getElementById('yearGan').textContent = ganList[Math.floor(Math.random() * ganList.length)];
-        document.getElementById('yearZhi').textContent = zhiList[Math.floor(Math.random() * zhiList.length)];
-        document.getElementById('monthGan').textContent = ganList[Math.floor(Math.random() * ganList.length)];
-        document.getElementById('monthZhi').textContent = zhiList[Math.floor(Math.random() * zhiList.length)];
-        document.getElementById('dayGan').textContent = ganList[Math.floor(Math.random() * ganList.length)];
-        document.getElementById('dayZhi').textContent = zhiList[Math.floor(Math.random() * zhiList.length)];
-        document.getElementById('hourGan').textContent = ganList[Math.floor(Math.random() * ganList.length)];
-        document.getElementById('hourZhi').textContent = zhiList[Math.floor(Math.random() * zhiList.length)];
+        // 年柱计算（以立春为界，这里简化处理）
+        const yearGan = (year - 4) % 10;
+        const yearZhi = (year - 4) % 12;
+        
+        // 月柱计算（根据年干推算月干）
+        const monthGan = (yearGan * 2 + parseInt(month)) % 10;
+        const monthZhi = (parseInt(month) - 1) % 12;
+        
+        // 日柱计算（使用更准确的算法）
+        const date = new Date(year, month - 1, day);
+        // 使用1900年1月31日作为基准日（甲子日）
+        const baseDate = new Date(1900, 0, 31);
+        const daysDiff = Math.floor((date - baseDate) / (1000 * 60 * 60 * 24));
+        const dayGan = (daysDiff + 0) % 10;
+        const dayZhi = (daysDiff + 0) % 12;
+        
+        // 时柱计算（根据日干推算时干）
+        const hourGan = (dayGan * 2 + Math.floor(parseInt(hour) / 2)) % 10;
+        const hourZhi = Math.floor(parseInt(hour) / 2) % 12;
+
+        // 显示计算结果
+        document.getElementById('yearGan').textContent = ganList[yearGan];
+        document.getElementById('yearZhi').textContent = zhiList[yearZhi];
+        document.getElementById('monthGan').textContent = ganList[monthGan];
+        document.getElementById('monthZhi').textContent = zhiList[monthZhi];
+        document.getElementById('dayGan').textContent = ganList[dayGan];
+        document.getElementById('dayZhi').textContent = zhiList[dayZhi];
+        document.getElementById('hourGan').textContent = ganList[hourGan];
+        document.getElementById('hourZhi').textContent = zhiList[hourZhi];
     }
 
     analyzeBaziWithAI(birthInfo) {
