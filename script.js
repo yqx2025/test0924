@@ -194,8 +194,9 @@ class FortuneApp {
     }
 
     async requestAIAnswer({ type, prompt, targetId }) {
+        const target = document.getElementById(targetId);
+        
         try {
-            const target = document.getElementById(targetId);
             if (target) {
                 target.innerHTML = '<div class="loading">AI正在分析中...</div>';
             }
