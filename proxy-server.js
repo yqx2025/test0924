@@ -1,7 +1,9 @@
 const express = require('express');
-const fetch = require('node-fetch');
 const cors = require('cors');
 require('dotenv').config();
+
+// 使用原生fetch（Node.js 18+支持）
+const fetch = globalThis.fetch || require('node-fetch');
 
 const app = express();
 const PORT = 3001;
