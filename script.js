@@ -203,7 +203,7 @@ class FortuneApp {
                 target.innerHTML = '<div class="loading">AI正在分析中...</div>';
             }
 
-            const response = await fetch('http://localhost:3001/api/chat', {
+            const response = await fetch('/.netlify/functions/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
