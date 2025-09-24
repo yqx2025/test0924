@@ -12,18 +12,18 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
-// OpenAI API 代理端点
+// DeepSeek API 代理端点
 app.post('/api/chat', async (req, res) => {
     try {
         const { model, messages, max_tokens } = req.body;
         
         // 从环境变量获取API密钥
-        const apiKey = process.env.OPENAI_API_KEY;
+        const apiKey = process.env.DEEPSEEK_API_KEY;
         
             if (!apiKey) {
                 return res.status(500).json({ 
                     error: 'DeepSeek API密钥未配置', 
-                    details: '请在环境变量中设置OPENAI_API_KEY' 
+                    details: '请在环境变量中设置DEEPSEEK_API_KEY' 
                 });
             }
         
@@ -75,7 +75,7 @@ app.get('/api/health', (req, res) => {
 app.listen(PORT, () => {
     console.log(`代理服务器运行在 http://localhost:${PORT}`);
     console.log(`健康检查: http://localhost:${PORT}/api/health`);
-    console.log(`OpenAI 代理: http://localhost:${PORT}/api/chat`);
+        console.log(`DeepSeek 代理: http://localhost:${PORT}/api/chat`);
 });
 
 // 优雅关闭

@@ -1,5 +1,5 @@
+// DeepSeek API Netlify Function
 // 使用原生fetch（Node.js 18+支持）
-// const fetch = require('node-fetch');
 
 exports.handler = async (event, context) => {
     // 处理CORS预检请求
@@ -32,7 +32,7 @@ exports.handler = async (event, context) => {
         const { model, messages, max_tokens } = JSON.parse(event.body);
         
         // 从环境变量获取API密钥
-        const apiKey = process.env.OPENAI_API_KEY;
+        const apiKey = process.env.DEEPSEEK_API_KEY;
         
             if (!apiKey) {
                 console.error('API密钥未配置');
@@ -43,7 +43,7 @@ exports.handler = async (event, context) => {
                     },
                     body: JSON.stringify({ 
                         error: 'DeepSeek API密钥未配置', 
-                        details: '请在Netlify环境变量中设置OPENAI_API_KEY' 
+                        details: '请在Netlify环境变量中设置DEEPSEEK_API_KEY' 
                     })
                 };
             }
