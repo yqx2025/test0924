@@ -51,23 +51,52 @@ app.post('/api/chat', async (req, res) => {
                 });
             }
 
-            // 设置流式响应头
-            res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-            res.setHeader('Transfer-Encoding', 'chunked');
-            
-            // 转发流式响应
-            response.body.on('data', (chunk) => {
-                res.write(chunk);
-            });
-            
-            response.body.on('end', () => {
-                res.end();
-            });
-            
-            response.body.on('error', (error) => {
-                console.error('流式响应错误:', error);
-                res.end();
-            });
+            // 处理流式响应
+            if (response.body && response.body.getReader) {
+                // 读取流式响应并累积
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullContent = '';
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value);
+                    
+                    // 解析SSE数据
+                    const lines = chunk.split('\n');
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6);
+                            if (data.trim() === '[DONE]') continue;
+                            try {
+                                const parsed = JSON.parse(data);
+                                if (parsed.choices && parsed.choices[0] && parsed.choices[0].delta && parsed.choices[0].delta.content) {
+                                    fullContent += parsed.choices[0].delta.content;
+                                }
+                            } catch (e) {
+                                // 忽略解析错误
+                            }
+                        }
+                    }
+                }
+                
+                // 返回完整的响应，模拟非流式格式
+                res.json({
+                    choices: [{
+                        message: {
+                            content: fullContent,
+                            role: 'assistant'
+                        },
+                        finish_reason: 'stop'
+                    }]
+                });
+            } else {
+                // 降级处理：如果不支持流式，读取普通响应
+                const data = await response.json();
+                res.json(data);
+            }
         
     } catch (error) {
         console.error('代理服务器错误:', error);
