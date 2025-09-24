@@ -167,7 +167,7 @@ class FortuneApp {
 出生地点：${birthInfo.place || '未填写'}
 当前年龄：${age}岁
 
-请按照以下固定格式提供完整的分析（请勿使用Markdown格式）：
+请按照以下格式提供完整分析（请勿使用Markdown格式）：
 
 ## 八字排盘
 - 年柱：[天干][地支]
@@ -176,28 +176,28 @@ class FortuneApp {
 - 时柱：[天干][地支]
 
 ## 五行分析
-[详细分析五行强弱、缺失、平衡状况]
+[五行强弱分析，缺失补充建议]
 
 ## 性格特征
-[根据八字分析性格特点、优缺点、性情倾向]
+[主要性格特点和优缺点]
 
 ## 事业财运
-[事业发展方向、财运状况、适合行业]
+[适合行业和财运状况]
 
 ## 感情婚姻
-[感情运势、婚姻状况、配偶特征]
+[感情运势和配偶特征]
 
 ## 健康运势
-[身体健康状况、需注意事项、保健建议]
+[健康状况和注意事项]
 
 ## 大运流年
 ### 当前大运（${Math.floor(age/10)*10}岁-${Math.floor(age/10)*10+9}岁）
-[分析当前这个10年大运的特点和运势]
+[当前10年大运特点]
 
-### ${currentYear}年流年运势
-[详细分析今年的运势情况]
+### ${currentYear}年流年
+[今年运势概况]
 
-请确保八字计算准确，内容专业详细。分析要全面深入，语言通俗易懂。`;
+请确保八字准确，内容简洁专业。`;
 
         // 只发送一次完整的请求
         this.requestAIAnswer({ type: 'complete_bazi', prompt, targetId: 'baziPillars' });
@@ -229,26 +229,34 @@ class FortuneApp {
 
             // 智能检测API端点
             const apiEndpoint = this.getApiEndpoint();
+            
+            // 创建超时控制器
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 45000); // 45秒超时
+            
             const response = await fetch(apiEndpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                signal: controller.signal,
                 body: JSON.stringify({
                     model: 'deepseek-chat',
                     messages: [
                         {
                             role: 'system',
-                            content: '你是一位专业的命理师，精通小六壬卜卦和五行八字分析。请用专业、准确、易懂的语言为用户提供分析。'
+                            content: '你是一位专业的命理师，精通小六壬卜卦和五行八字分析。请用专业、准确、简洁的语言为用户提供分析。'
                         },
                         {
                             role: 'user',
                             content: prompt
                         }
                     ],
-                    max_tokens: 4000
+                    max_tokens: 2000
                 })
             });
+            
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -277,7 +285,17 @@ class FortuneApp {
         } catch (error) {
             console.error('AI请求失败:', error);
             if (target) {
-                target.innerHTML = '<div class="error">AI分析暂时不可用，请稍后再试</div>';
+                let errorMessage = 'AI分析暂时不可用，请稍后再试';
+                
+                if (error.name === 'AbortError') {
+                    errorMessage = '请求超时，请稍后重试。如果问题持续，请尝试减少输入内容的复杂度。';
+                } else if (error.message.includes('504')) {
+                    errorMessage = '服务器处理超时，正在优化中。请稍后重试，或尝试使用本地环境。';
+                } else if (error.message.includes('502') || error.message.includes('503')) {
+                    errorMessage = '服务暂时不可用，请稍后重试。';
+                }
+                
+                target.innerHTML = `<div class="error">${errorMessage}</div>`;
             }
         }
     }

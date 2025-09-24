@@ -36,7 +36,7 @@ app.post('/api/chat', async (req, res) => {
                 body: JSON.stringify({
                     model: model || 'deepseek-chat',
                     messages: messages || [],
-                    max_tokens: max_tokens || 4000,
+                    max_tokens: max_tokens || 2000,
                     temperature: 0.7,
                     stream: true
                 })
