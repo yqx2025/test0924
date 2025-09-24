@@ -57,8 +57,9 @@ exports.handler = async (event, context) => {
                 body: JSON.stringify({
                     model: model || 'deepseek-chat',
                     messages: messages || [],
-                    max_tokens: max_tokens || 1000,
-                    temperature: 0.7
+                    max_tokens: max_tokens || 4000,
+                    temperature: 0.7,
+                    stream: true
                 })
             });
 
@@ -77,18 +78,56 @@ exports.handler = async (event, context) => {
                 };
             }
 
-        const data = await response.json();
-        
-        return {
-            statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS'
-            },
-            body: JSON.stringify(data)
-        };
+            // 读取流式响应并累积
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let result = '';
+            let fullContent = '';
+            
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                
+                const chunk = decoder.decode(value);
+                result += chunk;
+                
+                // 解析SSE数据
+                const lines = chunk.split('\n');
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const data = line.slice(6);
+                        if (data.trim() === '[DONE]') continue;
+                        try {
+                            const parsed = JSON.parse(data);
+                            if (parsed.choices && parsed.choices[0] && parsed.choices[0].delta && parsed.choices[0].delta.content) {
+                                fullContent += parsed.choices[0].delta.content;
+                            }
+                        } catch (e) {
+                            // 忽略解析错误
+                        }
+                    }
+                }
+            }
+            
+            // 返回完整的响应，模拟非流式格式
+            return {
+                statusCode: 200,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+                },
+                body: JSON.stringify({
+                    choices: [{
+                        message: {
+                            content: fullContent,
+                            role: 'assistant'
+                        },
+                        finish_reason: 'stop'
+                    }]
+                })
+            };
         
     } catch (error) {
         console.error('Function 错误:', error);

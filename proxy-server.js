@@ -36,8 +36,9 @@ app.post('/api/chat', async (req, res) => {
                 body: JSON.stringify({
                     model: model || 'deepseek-chat',
                     messages: messages || [],
-                    max_tokens: max_tokens || 1000,
-                    temperature: 0.7
+                    max_tokens: max_tokens || 4000,
+                    temperature: 0.7,
+                    stream: true
                 })
             });
 
@@ -50,8 +51,23 @@ app.post('/api/chat', async (req, res) => {
                 });
             }
 
-        const data = await response.json();
-        res.json(data);
+            // 设置流式响应头
+            res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+            res.setHeader('Transfer-Encoding', 'chunked');
+            
+            // 转发流式响应
+            response.body.on('data', (chunk) => {
+                res.write(chunk);
+            });
+            
+            response.body.on('end', () => {
+                res.end();
+            });
+            
+            response.body.on('error', (error) => {
+                console.error('流式响应错误:', error);
+                res.end();
+            });
         
     } catch (error) {
         console.error('代理服务器错误:', error);
