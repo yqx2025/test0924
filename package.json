@@ -6,6 +6,8 @@
   "scripts": {
     "start": "live-server --port=3000 --open=/index.html",
     "dev": "live-server --port=3000 --open=/index.html --watch=.",
+    "local": "node start-local.js",
+    "proxy": "node proxy-server.js",
     "build": "npm run minify",
     "minify": "terser script.js -o script.min.js && csso styles.css --output styles.min.css",
     "lint": "eslint script.js",

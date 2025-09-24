@@ -193,6 +193,22 @@ class FortuneApp {
         this.requestAIAnswer({ type: 'comprehensive', prompt, targetId: 'comprehensiveContent' });
     }
 
+    // 智能检测API端点
+    getApiEndpoint() {
+        // 检测是否在Netlify环境
+        if (window.location.hostname.includes('netlify.app')) {
+            return '/.netlify/functions/chat';
+        }
+        // 检测是否在localhost环境
+        else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3001/api/chat';
+        }
+        // 默认使用Netlify Function
+        else {
+            return '/.netlify/functions/chat';
+        }
+    }
+
     async requestAIAnswer({ type, prompt, targetId }) {
         const target = document.getElementById(targetId);
         
@@ -201,7 +217,9 @@ class FortuneApp {
                 target.innerHTML = '<div class="loading">AI正在分析中...</div>';
             }
 
-            const response = await fetch('/.netlify/functions/chat', {
+            // 智能检测API端点
+            const apiEndpoint = this.getApiEndpoint();
+            const response = await fetch(apiEndpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
