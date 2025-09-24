@@ -842,3 +842,135 @@ body::before {
         margin-right: 0;
     }
 }
+
+/* AI响应内容样式 */
+.ai-response {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.8;
+    color: #2c3e50;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 16px 0;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    backdrop-filter: blur(8px);
+}
+
+/* AI内容标题样式 */
+.ai-main-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 24px 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 3px solid #667eea;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ai-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 20px 0 12px 0;
+    padding-left: 12px;
+    border-left: 4px solid #667eea;
+    background: rgba(102, 126, 234, 0.05);
+    padding: 8px 0 8px 12px;
+    border-radius: 0 8px 8px 0;
+}
+
+.ai-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin: 16px 0 8px 0;
+    padding: 6px 12px;
+    background: rgba(102, 126, 234, 0.08);
+    border-radius: 6px;
+    border-left: 3px solid #a78bfa;
+}
+
+/* AI内容段落样式 */
+.ai-paragraph {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #374151;
+    margin: 12px 0;
+    text-align: justify;
+    text-justify: inter-character;
+}
+
+/* AI内容粗体样式 */
+.ai-bold {
+    font-weight: 700;
+    color: #1f2937;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* AI列表项样式 */
+.ai-list-item {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #4b5563;
+    margin: 8px 0;
+    padding: 8px 16px;
+    background: rgba(249, 250, 251, 0.8);
+    border-radius: 8px;
+    border-left: 3px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.ai-list-item:hover {
+    background: rgba(243, 244, 246, 0.9);
+    border-left-color: #667eea;
+    transform: translateX(4px);
+}
+
+/* 八字排盘特殊样式 */
+.ai-response .bazi-pillar {
+    display: inline-block;
+    margin: 4px 8px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* AI响应移动端适配 */
+@media (max-width: 768px) {
+    .ai-response {
+        padding: 16px;
+        margin: 12px 0;
+        font-size: 0.95rem;
+    }
+    
+    .ai-main-title {
+        font-size: 1.3rem;
+    }
+    
+    .ai-title {
+        font-size: 1.1rem;
+    }
+    
+    .ai-subtitle {
+        font-size: 1rem;
+    }
+    
+    .ai-list-item {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}

@@ -163,18 +163,30 @@ class FortuneApp {
 出生时间：${birthInfo.year}年${birthInfo.month}月${birthInfo.day}日${this.getHourName(birthInfo.hour)}
 出生地点：${birthInfo.place || '未填写'}
 
-请按照以下格式提供结果：
+请使用以下格式进行回复（请勿使用Markdown格式，直接使用这些标记）：
 
-**八字排盘：**
+## 八字排盘
 - 年柱：[天干][地支]
 - 月柱：[天干][地支]  
 - 日柱：[天干][地支]
 - 时柱：[天干][地支]
 
-**详细分析：**
-[请提供详细的命理解读，包括五行分析、十神分析、性格特征、事业财运、感情婚姻、健康运势等方面的分析]
+## 五行分析
+[分析五行强弱、缺失等]
 
-请确保八字计算准确，使用传统的农历和节气计算方法。`;
+## 性格特征
+[根据八字分析性格特点]
+
+## 事业财运
+[事业发展和财运分析]
+
+## 感情婚姻
+[感情和婚姻运势]
+
+## 健康运势
+[健康方面的建议]
+
+请确保八字计算准确，使用传统的农历和节气计算方法。回复内容要专业、详细、易懂。`;
 
         // 先显示八字排盘
         this.requestAIAnswer({ type: 'bazi', prompt, targetId: 'baziPillars' });
@@ -242,7 +254,10 @@ class FortuneApp {
             }
 
             const data = await response.json();
-            const aiResponse = data.choices[0].message.content;
+            let aiResponse = data.choices[0].message.content;
+
+            // 将AI响应从Markdown格式转换为HTML格式
+            aiResponse = this.formatAIResponse(aiResponse);
 
             if (target) {
                 target.innerHTML = `<div class="ai-response">${aiResponse}</div>`;
@@ -254,6 +269,35 @@ class FortuneApp {
                 target.innerHTML = '<div class="error">AI分析暂时不可用，请稍后再试</div>';
             }
         }
+    }
+
+    // 格式化AI响应，将Markdown转换为HTML
+    formatAIResponse(text) {
+        if (!text) return '';
+        
+        // 替换标题格式
+        text = text.replace(/^### (.*$)/gm, '<h4 class="ai-subtitle">$1</h4>');
+        text = text.replace(/^## (.*$)/gm, '<h3 class="ai-title">$1</h3>');
+        text = text.replace(/^# (.*$)/gm, '<h2 class="ai-main-title">$1</h2>');
+        
+        // 替换粗体
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="ai-bold">$1</strong>');
+        
+        // 替换列表项
+        text = text.replace(/^- (.*$)/gm, '<div class="ai-list-item">• $1</div>');
+        
+        // 替换段落（双换行变成段落分隔）
+        text = text.replace(/\n\n/g, '</p><p class="ai-paragraph">');
+        
+        // 包装整个内容在段落中
+        if (!text.startsWith('<h') && !text.startsWith('<div class="ai-list-item">')) {
+            text = '<p class="ai-paragraph">' + text + '</p>';
+        }
+        
+        // 处理换行
+        text = text.replace(/\n/g, '<br>');
+        
+        return text;
     }
 }
 
