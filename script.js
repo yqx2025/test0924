@@ -193,10 +193,7 @@ class FortuneApp {
         this.requestAIAnswer({ type: 'comprehensive', prompt, targetId: 'comprehensiveContent' });
     }
 
-    // AI 请求封装
-    const OPENAI_API_KEY = window.ENV?.OPENAI_API_KEY || "";
-
-    FortuneApp.prototype.requestAIAnswer = async function({ type, prompt, targetId }) {
+    async requestAIAnswer({ type, prompt, targetId }) {
         try {
             const target = document.getElementById(targetId);
             if (target) {
@@ -241,7 +238,7 @@ class FortuneApp {
                 target.innerHTML = '<div class="error">AI分析暂时不可用，请稍后再试</div>';
             }
         }
-    };
+    }
 }
 
 // 页面加载完成后初始化应用
