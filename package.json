@@ -1,0 +1,40 @@
+{
+  "name": "fortune-telling-simplified",
+  "version": "1.0.0",
+  "description": "简化版算命应用，包含小六壬卜卦和五行八字功能，集成OpenAI API",
+  "main": "script.js",
+  "scripts": {
+    "start": "live-server --port=3000 --open=/index.html",
+    "dev": "live-server --port=3000 --open=/index.html --watch=.",
+    "build": "npm run minify",
+    "minify": "terser script.js -o script.min.js && csso styles.css --output styles.min.css",
+    "lint": "eslint script.js",
+    "format": "prettier --write *.html *.css *.js"
+  },
+  "keywords": [
+    "算命",
+    "小六壬",
+    "五行八字",
+    "占卜",
+    "传统文化",
+    "fortune-telling",
+    "divination",
+    "openai",
+    "ai"
+  ],
+  "author": "qixia",
+  "license": "MIT",
+  "devDependencies": {
+    "csso-cli": "^4.0.2",
+    "eslint": "^9.35.0",
+    "live-server": "^1.2.2",
+    "prettier": "^3.6.2",
+    "terser": "^5.44.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2"
+  }
+}

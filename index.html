@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小六壬卜卦 & 五行八字 - 传统文化算命</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>小六壬卜卦 & 五行八字</h1>
+            <p class="subtitle">传统文化，现代解读</p>
+        </header>
+
+        <nav class="navigation">
+            <button class="nav-btn active" data-tab="xiaoliuren">小六壬卜卦</button>
+            <button class="nav-btn" data-tab="bazi">五行八字</button>
+        </nav>
+        
+        <!-- 小六壬卜卦页面 -->
+        <div id="xiaoliuren" class="tab-content active">
+            <div class="divination-section">
+                <h2>小六壬卜卦</h2>
+                <p class="description">小六壬是古代占卜术之一，用于预测事物的吉凶变化。请专注于您想要询问的问题，然后开始卜卦。</p>
+                
+                <div class="question-input">
+                    <label for="question">请输入您要询问的问题：</label>
+                    <input type="text" id="question" placeholder="例如：今天出行是否顺利？" maxlength="100">
+                </div>
+
+                <div class="divination-controls">
+                    <button id="startDivination" class="primary-btn">开始卜卦</button>
+                    <button id="resetDivination" class="secondary-btn">重新卜卦</button>
+                </div>
+
+                <div id="divinationProcess" class="divination-process hidden">
+                    <h3>卜卦过程</h3>
+                    <div class="hexagram-display">
+                        <div class="hexagram-item">
+                            <span class="label">月将：</span>
+                            <span id="yuejiang" class="value"></span>
+                        </div>
+                        <div class="hexagram-item">
+                            <span class="label">时辰：</span>
+                            <span id="shichen" class="value"></span>
+                        </div>
+                        <div class="hexagram-item">
+                            <span class="label">起课：</span>
+                            <span id="qike" class="value"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="divinationResult" class="divination-result hidden">
+                    <h3>卜卦结果</h3>
+                    <div id="divinationSymbol" class="hidden"></div>
+                    <div id="aiDivination" style="margin-top:12px; text-align:left;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 五行八字页面 -->
+        <div id="bazi" class="tab-content">
+            <div class="bazi-section">
+                <h2>五行八字</h2>
+                <p class="description">根据出生年月日时，计算五行八字，分析命理特征。</p>
+                
+                <div class="birth-input">
+                    <h3>请输入出生信息</h3>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="baziName">姓名（选填）：</label>
+                            <input type="text" id="baziName" placeholder="请输入姓名">
+                        </div>
+                        <div class="input-group">
+                            <label for="baziGender">性别：</label>
+                            <select id="baziGender">
+                                <option value="">选择性别</option>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="birthYear">出生年份：</label>
+                            <input type="number" id="birthYear" min="1900" max="2100" placeholder="1990">
+                        </div>
+                        <div class="input-group">
+                            <label for="birthMonth">出生月份：</label>
+                            <select id="birthMonth">
+                                <option value="">选择月份</option>
+                                <option value="1">一月</option>
+                                <option value="2">二月</option>
+                                <option value="3">三月</option>
+                                <option value="4">四月</option>
+                                <option value="5">五月</option>
+                                <option value="6">六月</option>
+                                <option value="7">七月</option>
+                                <option value="8">八月</option>
+                                <option value="9">九月</option>
+                                <option value="10">十月</option>
+                                <option value="11">十一月</option>
+                                <option value="12">十二月</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="birthDay">出生日期：</label>
+                            <input type="number" id="birthDay" min="1" max="31" placeholder="15">
+                        </div>
+                        <div class="input-group">
+                            <label for="birthHour">出生时辰：</label>
+                            <select id="birthHour">
+                                <option value="">选择时辰</option>
+                                <option value="23">子时 (23:00-01:00)</option>
+                                <option value="1">丑时 (01:00-03:00)</option>
+                                <option value="3">寅时 (03:00-05:00)</option>
+                                <option value="5">卯时 (05:00-07:00)</option>
+                                <option value="7">辰时 (07:00-09:00)</option>
+                                <option value="9">巳时 (09:00-11:00)</option>
+                                <option value="11">午时 (11:00-13:00)</option>
+                                <option value="13">未时 (13:00-15:00)</option>
+                                <option value="15">申时 (15:00-17:00)</option>
+                                <option value="17">酉时 (17:00-19:00)</option>
+                                <option value="19">戌时 (19:00-21:00)</option>
+                                <option value="21">亥时 (21:00-23:00)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group full-width">
+                            <label for="birthPlace">出生地点：</label>
+                            <input type="text" id="birthPlace" placeholder="请输入出生地点，如：北京市、上海市、广东省深圳市等">
+                        </div>
+                    </div>
+
+                    <button id="calculateBazi" class="primary-btn">计算八字</button>
+                </div>
+
+                <div id="baziResult" class="bazi-result hidden">
+                    <h3>八字排盘分析</h3>
+                    
+                    <!-- 基本信息 -->
+                    <div class="bazi-basic-info">
+                        <div class="info-item">
+                            <span class="info-label">姓名：</span>
+                            <span id="baziNameDisplay" class="info-value">待填写</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">性别：</span>
+                            <span id="baziGenderDisplay" class="info-value">待填写</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">出生时间：</span>
+                            <span id="baziBirthTime" class="info-value">待填写</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">出生地点：</span>
+                            <span id="baziBirthPlace" class="info-value">待填写</span>
+                        </div>
+                    </div>
+
+                    <!-- 四柱排盘 -->
+                    <div class="bazi-pillars-section">
+                        <h4>四柱排盘</h4>
+                        <div class="bazi-pillars">
+                            <div class="pillar">
+                                <div class="pillar-title">年柱</div>
+                                <div class="pillar-content">
+                                    <div class="gan" id="yearGan"></div>
+                                    <div class="zhi" id="yearZhi"></div>
+                                </div>
+                            </div>
+                            <div class="pillar">
+                                <div class="pillar-title">月柱</div>
+                                <div class="pillar-content">
+                                    <div class="gan" id="monthGan"></div>
+                                    <div class="zhi" id="monthZhi"></div>
+                                </div>
+                            </div>
+                            <div class="pillar">
+                                <div class="pillar-title">日柱</div>
+                                <div class="pillar-content">
+                                    <div class="gan" id="dayGan"></div>
+                                    <div class="zhi" id="dayZhi"></div>
+                                </div>
+                            </div>
+                            <div class="pillar">
+                                <div class="pillar-title">时柱</div>
+                                <div class="pillar-content">
+                                    <div class="gan" id="hourGan"></div>
+                                    <div class="zhi" id="hourZhi"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 五行分析 -->
+                    <div class="wuxing-analysis">
+                        <h4>五行分析</h4>
+                        <div id="wuxingChart" class="wuxing-chart"></div>
+                        <div id="wuxingContent" class="analysis-content"></div>
+                    </div>
+
+                    <!-- 十神分析 -->
+                    <div class="shishen-analysis">
+                        <h4>十神分析</h4>
+                        <div id="shishenContent" class="analysis-content"></div>
+                    </div>
+
+                    <!-- 性格特征 -->
+                    <div class="personality-analysis">
+                        <h4>性格特征</h4>
+                        <div id="personalityContent" class="analysis-content"></div>
+                    </div>
+
+                    <!-- 事业财运 -->
+                    <div class="career-analysis">
+                        <h4>事业财运</h4>
+                        <div id="careerContent" class="analysis-content"></div>
+                    </div>
+
+                    <!-- 感情婚姻 -->
+                    <div class="relationship-analysis">
+                        <h4>感情婚姻</h4>
+                        <div id="relationshipContent" class="analysis-content"></div>
+                    </div>
+
+                    <!-- 健康运势 -->
+                    <div class="health-analysis">
+                        <h4>健康运势</h4>
+                        <div id="healthContent" class="analysis-content"></div>
+                    </div>
+
+                    <!-- 大运流年 -->
+                    <div class="dayun-analysis">
+                        <h4>大运流年</h4>
+                        <div id="dayunContent" class="analysis-content"></div>
+                    </div>
+
+                    <!-- 综合建议 -->
+                    <div class="comprehensive-analysis">
+                        <h4>综合建议</h4>
+                        <div id="comprehensiveContent" class="analysis-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2024 小六壬卜卦 & 五行八字 - 仅供娱乐参考</p>
+        </footer>
+    </div>
+
+    <!-- 环境变量加载器 -->
+    <script src="env-loader.js"></script>
+    
+    <!-- 主应用脚本 -->
+    <script src="script.js"></script>
+</body>
+</html>

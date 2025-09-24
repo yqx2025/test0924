@@ -1,0 +1,844 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Serif SC', serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-attachment: fixed;
+    background-size: 400% 400%;
+    animation: gradientShift 20s ease infinite;
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 25%),
+        radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.06) 0%, transparent 35%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(52, 152, 219, 0.5) 25%, 
+        rgba(155, 89, 182, 0.5) 50%, 
+        rgba(231, 76, 60, 0.5) 75%, 
+        transparent 100%);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0.3; transform: translateX(-100%); }
+    50% { opacity: 1; transform: translateX(100%); }
+}
+
+/* 头部样式 */
+.header {
+    text-align: center;
+    padding: 30px 0;
+    border-bottom: 2px solid #f0f0f0;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    font-weight: 400;
+}
+
+/* 导航样式 */
+.navigation {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.nav-btn {
+    padding: 12px 30px;
+    background: #ecf0f1;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.nav-btn:hover {
+    background: #3498db;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.nav-btn.active {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+/* 标签页内容 */
+.tab-content {
+    display: none;
+    min-height: 500px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 小六壬卜卦样式 */
+.divination-section {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(248, 250, 252, 0.98) 50%, 
+        rgba(241, 245, 249, 0.95) 100%);
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(52, 152, 219, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(155, 89, 182, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 60% 20%, rgba(231, 76, 60, 0.03) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f1c40f' fill-opacity='0.03'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm15 0c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.divination-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(52, 152, 219, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 70% 60%, rgba(155, 89, 182, 0.08) 0%, transparent 25%),
+        radial-gradient(circle at 20% 80%, rgba(241, 196, 15, 0.06) 0%, transparent 30%);
+    animation: backgroundFloat 20s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes backgroundFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-10px, -10px) rotate(1deg); }
+    50% { transform: translate(10px, -5px) rotate(-1deg); }
+    75% { transform: translate(-5px, 10px) rotate(0.5deg); }
+}
+
+.divination-section h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.description {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.question-input {
+    margin-bottom: 30px;
+}
+
+.question-input label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.question-input input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #ecf0f1;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+.question-input input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+}
+
+/* 按钮样式 */
+.divination-controls {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.primary-btn {
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(231, 76, 60, 0.3);
+}
+
+.secondary-btn {
+    padding: 15px 40px;
+    background: transparent;
+    color: #7f8c8d;
+    border: 2px solid #bdc3c7;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.secondary-btn:hover {
+    background: #bdc3c7;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* 卜卦过程样式 */
+.divination-process {
+    background: linear-gradient(135deg, 
+        rgba(248, 249, 250, 0.9) 0%, 
+        rgba(241, 245, 249, 0.95) 100%);
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(52, 152, 219, 0.08) 0%, transparent 30%),
+        url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233498db' fill-opacity='0.04'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E");
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    border-left: 5px solid #3498db;
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.divination-process h3 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+.hexagram-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.hexagram-item {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.hexagram-item .label {
+    font-weight: 500;
+    color: #7f8c8d;
+    margin-right: 10px;
+}
+
+.hexagram-item .value {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+/* 卜卦结果样式 */
+.divination-result {
+    background: linear-gradient(135deg, 
+        rgba(255, 245, 245, 0.95) 0%, 
+        rgba(255, 230, 230, 0.98) 50%,
+        rgba(252, 228, 228, 0.95) 100%);
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(231, 76, 60, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(241, 196, 15, 0.04) 0%, transparent 35%),
+        url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e74c3c' fill-opacity='0.03'%3E%3Cpath d='M25 25c0-6.9-5.6-12.5-12.5-12.5S0 18.1 0 25s5.6 12.5 12.5 12.5S25 31.9 25 25zm12.5 0c0-6.9-5.6-12.5-12.5-12.5S12.5 18.1 12.5 25s5.6 12.5 12.5 12.5S37.5 31.9 37.5 25z'/%3E%3C/g%3E%3C/svg%3E");
+    padding: 40px;
+    border-radius: 15px;
+    border: 2px solid rgba(250, 177, 160, 0.6);
+    box-shadow: 0 15px 35px rgba(231, 76, 60, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.divination-result::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: 
+        radial-gradient(circle at 30% 20%, rgba(231, 76, 60, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(241, 196, 15, 0.03) 0%, transparent 50%);
+    animation: resultGlow 15s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes resultGlow {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); }
+}
+
+.divination-result h3 {
+    color: #d63031;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* 卦象显示样式 */
+.divination-symbol {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    color: white;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+}
+
+.divination-symbol h3 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.symbol-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.symbol-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.symbol-label {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.symbol-value {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.symbol-value.fortune-good {
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+}
+
+.symbol-value.fortune-bad {
+    color: #f87171;
+    text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
+}
+
+/* 八字排盘样式 */
+.bazi-basic-info {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #dee2e6;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px 0;
+}
+
+.info-item:last-child {
+    margin-bottom: 0;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #495057;
+    min-width: 80px;
+    margin-right: 15px;
+}
+
+.info-value {
+    color: #212529;
+    font-size: 16px;
+}
+
+.bazi-pillars-section {
+    margin: 30px 0;
+}
+
+.bazi-pillars-section h4 {
+    color: #495057;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.analysis-content {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    border-left: 4px solid #667eea;
+    line-height: 1.6;
+}
+
+.shishen-analysis,
+.wuxing-analysis,
+.dayun-analysis,
+.personality-analysis,
+.career-analysis,
+.relationship-analysis,
+.health-analysis,
+.comprehensive-analysis {
+    margin: 25px 0;
+}
+
+.shishen-analysis h4,
+.wuxing-analysis h4,
+.dayun-analysis h4,
+.personality-analysis h4,
+.career-analysis h4,
+.relationship-analysis h4,
+.health-analysis h4,
+.comprehensive-analysis h4 {
+    color: #495057;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e9ecef;
+    font-size: 18px;
+}
+
+.comprehensive-analysis {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    padding: 20px;
+    color: white;
+    margin-top: 30px;
+}
+
+.comprehensive-analysis h4 {
+    color: white;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.comprehensive-analysis .analysis-content {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid rgba(255, 255, 255, 0.5);
+    color: white;
+}
+
+/* 五行八字样式 */
+.bazi-section {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(252, 248, 245, 0.98) 50%, 
+        rgba(249, 245, 241, 0.95) 100%);
+    background-image: 
+        radial-gradient(circle at 15% 25%, rgba(241, 196, 15, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(231, 76, 60, 0.04) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(46, 204, 113, 0.03) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e74c3c' fill-opacity='0.02'%3E%3Cpath d='M40 40c11.046 0 20-8.954 20-20S51.046 0 40 0 20 8.954 20 20s8.954 20 20 20zm0 20c11.046 0 20-8.954 20-20s-8.954-20-20-20-20 8.954-20 20 8.954 20 20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.bazi-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 25% 30%, rgba(155, 89, 182, 0.08) 0%, transparent 25%),
+        radial-gradient(circle at 75% 70%, rgba(52, 152, 219, 0.06) 0%, transparent 30%),
+        radial-gradient(circle at 40% 80%, rgba(241, 196, 15, 0.05) 0%, transparent 35%);
+    animation: backgroundFloat 25s ease-in-out infinite reverse;
+    z-index: -1;
+}
+
+.bazi-section h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.birth-input {
+    background: linear-gradient(135deg, 
+        rgba(248, 249, 250, 0.9) 0%, 
+        rgba(243, 244, 246, 0.95) 100%);
+    background-image: 
+        radial-gradient(circle at 15% 15%, rgba(46, 204, 113, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(155, 89, 182, 0.04) 0%, transparent 40%),
+        url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239b59b6' fill-opacity='0.03'%3E%3Cpath d='M15 15c0-4.1-3.4-7.5-7.5-7.5S0 10.9 0 15s3.4 7.5 7.5 7.5S15 19.1 15 7.5zm7.5 0c0-4.1-3.4-7.5-7.5-7.5s-7.5 3.4-7.5 7.5 3.4 7.5 7.5 7.5 7.5-3.4 7.5-7.5z'/%3E%3C/g%3E%3C/svg%3E");
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(155, 89, 182, 0.08);
+    border: 1px solid rgba(155, 89, 182, 0.1);
+}
+
+.birth-input h3 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.3rem;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.input-group input,
+.input-group select {
+    padding: 12px;
+    border: 2px solid #ecf0f1;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+}
+
+/* 八字结果样式 */
+.bazi-result {
+    background: linear-gradient(135deg, 
+        rgba(245, 247, 250, 0.95) 0%, 
+        rgba(195, 207, 226, 0.98) 50%,
+        rgba(215, 227, 246, 0.95) 100%);
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(52, 152, 219, 0.08) 0%, transparent 35%),
+        radial-gradient(circle at 75% 75%, rgba(155, 89, 182, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 50% 10%, rgba(46, 204, 113, 0.04) 0%, transparent 45%),
+        url("data:image/svg+xml,%3Csvg width='70' height='70' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233498db' fill-opacity='0.03'%3E%3Cpath d='M35 35c0-9.7-7.8-17.5-17.5-17.5S0 25.3 0 35s7.8 17.5 17.5 17.5S35 44.7 35 35zm17.5 0c0-9.7-7.8-17.5-17.5-17.5S17.5 25.3 17.5 35s7.8 17.5 17.5 17.5S52.5 44.7 52.5 35z'/%3E%3C/g%3E%3C/svg%3E");
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(52, 152, 219, 0.15);
+    border: 1px solid rgba(195, 207, 226, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.bazi-result::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    right: -30px;
+    bottom: -30px;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(52, 152, 219, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(155, 89, 182, 0.04) 0%, transparent 50%);
+    animation: baziFlow 18s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes baziFlow {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    33% { transform: rotate(1deg) scale(1.01); }
+    66% { transform: rotate(-1deg) scale(0.99); }
+}
+
+.bazi-result h3 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.bazi-pillars {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.pillar {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.pillar:hover {
+    transform: translateY(-5px);
+}
+
+.pillar-title {
+    font-weight: 600;
+    color: #7f8c8d;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.pillar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gan, .zhi {
+    padding: 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.gan {
+    background: linear-gradient(135deg, #ff7675, #fd79a8);
+    color: white;
+}
+
+.zhi {
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
+    color: white;
+}
+
+.wuxing-analysis {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.wuxing-analysis h4 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.wuxing-chart {
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.wuxing-description {
+    color: #555;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* 隐藏类 */
+.hidden {
+    display: none !important;
+}
+
+/* 页脚样式 */
+.footer {
+    text-align: center;
+    padding: 30px 0;
+    border-top: 2px solid #f0f0f0;
+    margin-top: 40px;
+    color: #7f8c8d;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        padding: 15px;
+        border-radius: 15px;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .nav-btn {
+        width: 100%;
+    }
+    
+    .divination-section,
+    .bazi-section {
+        padding: 25px;
+    }
+    
+    .symbol-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .symbol-item {
+        padding: 10px;
+    }
+    
+    .symbol-value {
+        font-size: 14px;
+    }
+    
+    .input-group.full-width {
+        grid-column: 1 / -1;
+    }
+    
+    .divination-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .primary-btn,
+    .secondary-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .input-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .bazi-pillars {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .hexagram-display {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .bazi-pillars {
+        grid-template-columns: 1fr;
+    }
+    
+    .analysis-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .analysis-label {
+        min-width: auto;
+        margin-right: 0;
+    }
+}
