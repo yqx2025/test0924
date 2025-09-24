@@ -222,7 +222,7 @@ class FortuneApp {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    model: 'gpt-4o',
+                    model: 'deepseek-chat',
                     messages: [
                         {
                             role: 'system',
