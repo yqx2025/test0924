@@ -57,9 +57,10 @@ exports.handler = async (event, context) => {
                 body: JSON.stringify({
                     model: model || 'deepseek-chat',
                     messages: messages || [],
-                    max_tokens: max_tokens || 2000,
+                    max_tokens: max_tokens || 4000,
                     temperature: 0.7,
-                    stream: true
+                    stream: true,
+                    reasoning: false  // 关闭思考模式，使用纯chat模式
                 })
             });
 

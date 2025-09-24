@@ -230,9 +230,8 @@ class FortuneApp {
             // 智能检测API端点
             const apiEndpoint = this.getApiEndpoint();
             
-            // 创建超时控制器
+            // 创建控制器（无超时限制，支持流式输出）
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 45000); // 45秒超时
             
             const response = await fetch(apiEndpoint, {
                 method: 'POST',
@@ -252,11 +251,12 @@ class FortuneApp {
                             content: prompt
                         }
                     ],
-                    max_tokens: 2000
+                    max_tokens: 4000,
+                    stream: true,
+                    temperature: 0.7,
+                    reasoning: false  // 关闭思考模式，使用纯chat模式
                 })
             });
-            
-            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
