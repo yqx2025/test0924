@@ -245,7 +245,7 @@ class FortuneApp {
                     messages: [
                         {
                             role: 'system',
-                            content: '你是一位专业的命理师，精通小六壬卜卦和五行八字分析。请用专业、准确、简洁的语言为用户提供分析。'
+                            content: '你是一位专业的命理师，精通小六壬卜卦和五行八字分析。请用专业、准确、简洁的语言为用户提供分析。请勿在回复中提及AI、DeepSeek、算法生成或仅供参考等字样。'
                         },
                         {
                             role: 'user',
@@ -264,6 +264,9 @@ class FortuneApp {
 
             const data = await response.json();
             let aiResponse = data.choices[0].message.content;
+
+            // 过滤掉DeepSeek相关的语句
+            aiResponse = this.filterDeepSeekContent(aiResponse);
 
             // 将AI响应从Markdown格式转换为HTML格式
             aiResponse = this.formatAIResponse(aiResponse);
@@ -298,6 +301,43 @@ class FortuneApp {
                 target.innerHTML = `<div class="error">${errorMessage}</div>`;
             }
         }
+    }
+
+    // 过滤DeepSeek相关内容
+    filterDeepSeekContent(text) {
+        if (!text) return '';
+        
+        // 需要过滤的内容模式
+        const filtersToRemove = [
+            // 完全匹配的句子
+            /以上推算结果由DeepSeek生成，仅供娱乐参考。婚姻是人生大事，愿您以诚心与智慧经营幸福。/g,
+            /以上分析由DeepSeek生成，仅供娱乐参考。/g,
+            /本分析由DeepSeek提供，仅供参考。/g,
+            
+            // 包含DeepSeek的句子
+            /.*DeepSeek.*?[。！？\.]/g,
+            
+            // 常见的免责声明
+            /.*仅供娱乐参考.*?[。！？\.]/g,
+            /.*婚姻是人生大事.*?[。！？\.]/g,
+            /.*以诚心与智慧经营幸福.*?[。！？\.]/g,
+            
+            // 其他AI相关的声明
+            /.*AI生成.*?[。！？\.]/g,
+            /.*人工智能.*?[。！？\.]/g,
+            /.*算法计算.*?[。！？\.]/g,
+        ];
+        
+        // 逐个应用过滤规则
+        filtersToRemove.forEach(filter => {
+            text = text.replace(filter, '');
+        });
+        
+        // 清理多余的空行和空格
+        text = text.replace(/\n\s*\n\s*\n/g, '\n\n'); // 多个空行变成两个
+        text = text.replace(/^\s+|\s+$/g, ''); // 去除首尾空白
+        
+        return text;
     }
 
     // 格式化AI响应，将Markdown转换为HTML
