@@ -1,4 +1,5 @@
-const fetch = require('node-fetch');
+// 使用原生fetch（Node.js 18+支持）
+// const fetch = require('node-fetch');
 
 exports.handler = async (event, context) => {
     // 处理CORS预检请求
