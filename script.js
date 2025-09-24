@@ -156,14 +156,18 @@ class FortuneApp {
 
 
     analyzeBaziWithAI(birthInfo) {
+        const currentYear = new Date().getFullYear();
+        const age = currentYear - parseInt(birthInfo.year);
+        
         const prompt = `请根据以下出生信息计算八字排盘并进行详细分析：
 
 姓名：${birthInfo.name || '未填写'}
 性别：${birthInfo.gender || '未选择'}
 出生时间：${birthInfo.year}年${birthInfo.month}月${birthInfo.day}日${this.getHourName(birthInfo.hour)}
 出生地点：${birthInfo.place || '未填写'}
+当前年龄：${age}岁
 
-请使用以下格式进行回复（请勿使用Markdown格式，直接使用这些标记）：
+请按照以下固定格式提供完整的分析（请勿使用Markdown格式）：
 
 ## 八字排盘
 - 年柱：[天干][地支]
@@ -172,34 +176,31 @@ class FortuneApp {
 - 时柱：[天干][地支]
 
 ## 五行分析
-[分析五行强弱、缺失等]
+[详细分析五行强弱、缺失、平衡状况]
 
 ## 性格特征
-[根据八字分析性格特点]
+[根据八字分析性格特点、优缺点、性情倾向]
 
 ## 事业财运
-[事业发展和财运分析]
+[事业发展方向、财运状况、适合行业]
 
 ## 感情婚姻
-[感情和婚姻运势]
+[感情运势、婚姻状况、配偶特征]
 
 ## 健康运势
-[健康方面的建议]
+[身体健康状况、需注意事项、保健建议]
 
-请确保八字计算准确，使用传统的农历和节气计算方法。回复内容要专业、详细、易懂。`;
+## 大运流年
+### 当前大运（${Math.floor(age/10)*10}岁-${Math.floor(age/10)*10+9}岁）
+[分析当前这个10年大运的特点和运势]
 
-        // 先显示八字排盘
-        this.requestAIAnswer({ type: 'bazi', prompt, targetId: 'baziPillars' });
-        
-        // 然后进行详细分析
-        this.requestAIAnswer({ type: 'wuxing', prompt, targetId: 'wuxingContent' });
-        this.requestAIAnswer({ type: 'shishen', prompt, targetId: 'shishenContent' });
-        this.requestAIAnswer({ type: 'personality', prompt, targetId: 'personalityContent' });
-        this.requestAIAnswer({ type: 'career', prompt, targetId: 'careerContent' });
-        this.requestAIAnswer({ type: 'relationship', prompt, targetId: 'relationshipContent' });
-        this.requestAIAnswer({ type: 'health', prompt, targetId: 'healthContent' });
-        this.requestAIAnswer({ type: 'dayun', prompt, targetId: 'dayunContent' });
-        this.requestAIAnswer({ type: 'comprehensive', prompt, targetId: 'comprehensiveContent' });
+### ${currentYear}年流年运势
+[详细分析今年的运势情况]
+
+请确保八字计算准确，内容专业详细。分析要全面深入，语言通俗易懂。`;
+
+        // 只发送一次完整的请求
+        this.requestAIAnswer({ type: 'complete_bazi', prompt, targetId: 'baziPillars' });
     }
 
     // 智能检测API端点
@@ -261,6 +262,16 @@ class FortuneApp {
 
             if (target) {
                 target.innerHTML = `<div class="ai-response">${aiResponse}</div>`;
+                
+                // 如果是完整八字分析，显示付费按钮
+                if (type === 'complete_bazi') {
+                    setTimeout(() => {
+                        const paymentSection = document.getElementById('paymentSection');
+                        if (paymentSection) {
+                            paymentSection.classList.remove('hidden');
+                        }
+                    }, 1000);
+                }
             }
 
         } catch (error) {
