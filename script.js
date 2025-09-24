@@ -141,10 +141,7 @@ class FortuneApp {
         document.getElementById('baziBirthTime').textContent = `${year}年${month}月${day}日${this.getHourName(hour)}`;
         document.getElementById('baziBirthPlace').textContent = place || '未填写';
 
-        // 计算八字
-        this.calculateBaziPillars(year, month, day, hour);
-        
-        // 使用AI分析八字
+        // 直接使用AI计算和分析八字，不进行本地计算
         this.analyzeBaziWithAI({ name, gender, year, month, day, hour, place });
     }
 
@@ -157,52 +154,32 @@ class FortuneApp {
         return hourNames[hour] || '未知时辰';
     }
 
-    calculateBaziPillars(year, month, day, hour) {
-        // 真正的八字计算算法
-        const ganList = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
-        const zhiList = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-
-        // 年柱计算（以立春为界，这里简化处理）
-        const yearGan = (year - 4) % 10;
-        const yearZhi = (year - 4) % 12;
-        
-        // 月柱计算（根据年干推算月干）
-        const monthGan = (yearGan * 2 + parseInt(month)) % 10;
-        const monthZhi = (parseInt(month) - 1) % 12;
-        
-        // 日柱计算（使用更准确的算法）
-        const date = new Date(year, month - 1, day);
-        // 使用1900年1月31日作为基准日（甲子日）
-        const baseDate = new Date(1900, 0, 31);
-        const daysDiff = Math.floor((date - baseDate) / (1000 * 60 * 60 * 24));
-        const dayGan = (daysDiff + 0) % 10;
-        const dayZhi = (daysDiff + 0) % 12;
-        
-        // 时柱计算（根据日干推算时干）
-        const hourGan = (dayGan * 2 + Math.floor(parseInt(hour) / 2)) % 10;
-        const hourZhi = Math.floor(parseInt(hour) / 2) % 12;
-
-        // 显示计算结果
-        document.getElementById('yearGan').textContent = ganList[yearGan];
-        document.getElementById('yearZhi').textContent = zhiList[yearZhi];
-        document.getElementById('monthGan').textContent = ganList[monthGan];
-        document.getElementById('monthZhi').textContent = zhiList[monthZhi];
-        document.getElementById('dayGan').textContent = ganList[dayGan];
-        document.getElementById('dayZhi').textContent = zhiList[dayZhi];
-        document.getElementById('hourGan').textContent = ganList[hourGan];
-        document.getElementById('hourZhi').textContent = zhiList[hourZhi];
-    }
 
     analyzeBaziWithAI(birthInfo) {
-        const prompt = `请分析以下八字信息：
+        const prompt = `请根据以下出生信息计算八字排盘并进行详细分析：
+
 姓名：${birthInfo.name || '未填写'}
 性别：${birthInfo.gender || '未选择'}
 出生时间：${birthInfo.year}年${birthInfo.month}月${birthInfo.day}日${this.getHourName(birthInfo.hour)}
 出生地点：${birthInfo.place || '未填写'}
 
-请提供详细的八字分析，包括五行分析、十神分析、性格特征、事业财运、感情婚姻、健康运势、大运流年和综合建议。`;
+请按照以下格式提供结果：
 
-        // 并行请求多个分析
+**八字排盘：**
+- 年柱：[天干][地支]
+- 月柱：[天干][地支]  
+- 日柱：[天干][地支]
+- 时柱：[天干][地支]
+
+**详细分析：**
+[请提供详细的命理解读，包括五行分析、十神分析、性格特征、事业财运、感情婚姻、健康运势等方面的分析]
+
+请确保八字计算准确，使用传统的农历和节气计算方法。`;
+
+        // 先显示八字排盘
+        this.requestAIAnswer({ type: 'bazi', prompt, targetId: 'baziPillars' });
+        
+        // 然后进行详细分析
         this.requestAIAnswer({ type: 'wuxing', prompt, targetId: 'wuxingContent' });
         this.requestAIAnswer({ type: 'shishen', prompt, targetId: 'shishenContent' });
         this.requestAIAnswer({ type: 'personality', prompt, targetId: 'personalityContent' });
